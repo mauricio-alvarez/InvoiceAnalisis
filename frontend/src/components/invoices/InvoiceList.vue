@@ -1,7 +1,7 @@
 <template>
   <div class="bg-white rounded-lg shadow-md p-6">
     <div class="flex justify-between items-center mb-6">
-      <h2 class="text-2xl font-bold">My Invoices</h2>
+      <h2 class="text-2xl font-bold">Mis Facturas</h2>
       <div class="flex gap-2">
         <select
           v-model="sortBy"
@@ -46,25 +46,25 @@
         <thead class="bg-gray-50">
           <tr>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Invoice #
+              FACTURA #
             </th>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Date
+              FECHA
             </th>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Vendor
+              VENDEDOR
             </th>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Amount
+              MONTO
             </th>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Status
+              ESTADO
             </th>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Uploaded
+              SUBIDO EL
             </th>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Actions
+              ACCIONES
             </th>
           </tr>
         </thead>
@@ -98,7 +98,7 @@
                 @click="viewDetails(invoice.id)"
                 class="text-blue-600 hover:text-blue-900 mr-3"
               >
-                View
+                Ver
               </button>
             </td>
           </tr>

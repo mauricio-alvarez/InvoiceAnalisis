@@ -90,21 +90,21 @@ const validateForm = (): boolean => {
   errors.value = {};
   
   if (!email.value) {
-    errors.value.email = 'Email is required';
+    errors.value.email = 'Correo es requerido.';
   } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
-    errors.value.email = 'Invalid email format';
+    errors.value.email = 'Formato de correo inválido';
   }
   
   if (!password.value) {
-    errors.value.password = 'Password is required';
+    errors.value.password = 'Contraseña es requerida.';
   } else if (password.value.length < 6) {
-    errors.value.password = 'Password must be at least 6 characters';
+    errors.value.password = 'Las contraseñas deben tener al menos 6 caracteres.';
   }
   
   if (!confirmPassword.value) {
-    errors.value.confirmPassword = 'Please confirm your password';
+    errors.value.confirmPassword = 'Por favor confirma tu contraseña.';
   } else if (password.value !== confirmPassword.value) {
-    errors.value.confirmPassword = 'Passwords do not match';
+    errors.value.confirmPassword = 'Las contraseñas no coinciden.';
   }
   
   return Object.keys(errors.value).length === 0;

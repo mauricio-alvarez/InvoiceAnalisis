@@ -5,7 +5,7 @@
         <div class="mb-8">
           <h1 class="text-3xl font-bold text-gray-900">Dashboard</h1>
           <p class="mt-2 text-sm text-gray-600">
-            Welcome back, {{ currentUser?.email }}
+            Bienvenido de vuelta, {{ currentUser?.email }}
           </p>
         </div>
 
@@ -23,16 +23,16 @@
               </svg>
             </div>
             <div class="ml-3 flex-1">
-              <h3 class="text-sm font-medium text-blue-800">Complete Your Profile</h3>
+              <h3 class="text-sm font-medium text-blue-800">Complete sus datos del Perfil</h3>
               <p class="mt-1 text-sm text-blue-700">
-                Please complete your business profile to upload invoices.
+                Por favor llene sus datos del perfil para poder cargar facturas.
               </p>
               <div class="mt-3">
                 <router-link
                   to="/profile"
                   class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200"
                 >
-                  Complete Profile
+                  Completar Perfil
                 </router-link>
               </div>
             </div>
@@ -50,7 +50,7 @@
                 </div>
                 <div class="ml-5 w-0 flex-1">
                   <dl>
-                    <dt class="text-sm font-medium text-gray-500 truncate">Total Invoices</dt>
+                    <dt class="text-sm font-medium text-gray-500 truncate">Total de Facturas</dt>
                     <dd class="text-lg font-semibold text-gray-900">{{ totalInvoices }}</dd>
                   </dl>
                 </div>
@@ -68,7 +68,7 @@
                 </div>
                 <div class="ml-5 w-0 flex-1">
                   <dl>
-                    <dt class="text-sm font-medium text-gray-500 truncate">Processing</dt>
+                    <dt class="text-sm font-medium text-gray-500 truncate">Procesando</dt>
                     <dd class="text-lg font-semibold text-gray-900">{{ processingInvoices }}</dd>
                   </dl>
                 </div>
@@ -86,7 +86,7 @@
                 </div>
                 <div class="ml-5 w-0 flex-1">
                   <dl>
-                    <dt class="text-sm font-medium text-gray-500 truncate">Processed</dt>
+                    <dt class="text-sm font-medium text-gray-500 truncate">Procesadas</dt>
                     <dd class="text-lg font-semibold text-gray-900">{{ processedInvoices }}</dd>
                   </dl>
                 </div>
@@ -97,7 +97,7 @@
 
         <div class="bg-white shadow rounded-lg p-6">
           <div class="flex justify-between items-center mb-4">
-            <h2 class="text-xl font-semibold text-gray-900">Quick Actions</h2>
+            <h2 class="text-xl font-semibold text-gray-900">Acciones Rápidas</h2>
           </div>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <router-link
@@ -108,8 +108,8 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
               </svg>
               <div class="ml-4">
-                <p class="text-sm font-medium text-gray-900">Upload Invoice</p>
-                <p class="text-xs text-gray-500">Upload a new PDF invoice</p>
+                <p class="text-sm font-medium text-gray-900">Subir Factura</p>
+                <p class="text-xs text-gray-500">Suba una nueva Factura</p>
               </div>
             </router-link>
 
@@ -121,8 +121,8 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
               <div class="ml-4">
-                <p class="text-sm font-medium text-gray-900">View Invoices</p>
-                <p class="text-xs text-gray-500">Browse all your invoices</p>
+                <p class="text-sm font-medium text-gray-900">Ver Facturas</p>
+                <p class="text-xs text-gray-500">Visualice todas sus facturas cargadas</p>
               </div>
             </router-link>
           </div>

@@ -1,10 +1,10 @@
 <template>
   <div class="max-w-xl mx-auto p-6 bg-white rounded-lg shadow-md">
-    <h2 class="text-2xl font-bold mb-6">Upload Invoice</h2>
+    <h2 class="text-2xl font-bold mb-6">Cargar Factura</h2>
     
     <div class="mb-6">
       <label class="block text-sm font-medium text-gray-700 mb-2">
-        Select PDF File
+        Seleccione PDF
       </label>
       <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-500 transition-colors">
         <input
@@ -19,8 +19,8 @@
           <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
           </svg>
-          <p class="mt-2 text-sm text-gray-600">Click to select a PDF file</p>
-          <p class="text-xs text-gray-500 mt-1">Maximum file size: 10MB</p>
+          <p class="mt-2 text-sm text-gray-600">Haga click para seleccionar un archivo PDF</p>
+          <p class="text-xs text-gray-500 mt-1">Tamaño máximo: 10MB</p>
         </div>
         
         <div v-else class="space-y-2">
@@ -34,7 +34,7 @@
             type="button"
             class="text-sm text-red-600 hover:text-red-800"
           >
-            Remove
+            Eliminar
           </button>
         </div>
       </div>
@@ -48,7 +48,7 @@
           :style="{ width: `${progress}%` }"
         ></div>
       </div>
-      <p class="text-sm text-gray-600 mt-2 text-center">Uploading... {{ progress }}%</p>
+      <p class="text-sm text-gray-600 mt-2 text-center">Subiendo... {{ progress }}%</p>
     </div>
 
     <div v-if="success" class="mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded">

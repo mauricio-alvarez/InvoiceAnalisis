@@ -4,9 +4,9 @@
       <div class="px-4 py-6 sm:px-0">
         <div class="mb-8 flex justify-between items-center">
           <div>
-            <h1 class="text-3xl font-bold text-gray-900">Invoices</h1>
+            <h1 class="text-3xl font-bold text-gray-900">Facturas</h1>
             <p class="mt-2 text-sm text-gray-600">
-              Manage and view all your uploaded invoices
+              Controle y visualice las facturas subidas.
             </p>
           </div>
           <router-link
@@ -16,7 +16,7 @@
             <svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
             </svg>
-            Upload Invoice
+            Subir Factura
           </router-link>
         </div>
 

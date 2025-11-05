@@ -2,9 +2,9 @@
   <div class="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-3xl mx-auto">
       <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900">Profile</h1>
+        <h1 class="text-3xl font-bold text-gray-900">Perfil</h1>
         <p class="mt-2 text-sm text-gray-600">
-          Manage your business profile information
+          Complete información de su perfil.
         </p>
       </div>
 

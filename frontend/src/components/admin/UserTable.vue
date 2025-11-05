@@ -28,10 +28,10 @@
               Role
             </th>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Status
+              Estado
             </th>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Registered
+              Registrado
             </th>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Actions
@@ -102,7 +102,7 @@
     <!-- Edit Modal -->
     <div v-if="showEditModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div class="bg-white rounded-lg p-6 max-w-md w-full">
-        <h3 class="text-xl font-bold mb-4">Edit User</h3>
+        <h3 class="text-xl font-bold mb-4">Editar Usuario</h3>
         
         <div class="mb-4">
           <label class="block text-sm font-medium text-gray-700 mb-2">Role</label>
@@ -110,7 +110,7 @@
             v-model="editForm.role"
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <option value="user">User</option>
+            <option value="user">Usuario</option>
             <option value="admin">Admin</option>
           </select>
         </div>
@@ -122,7 +122,7 @@
               type="checkbox"
               class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
             />
-            <span class="ml-2 text-sm text-gray-700">Active</span>
+            <span class="ml-2 text-sm text-gray-700">Activo</span>
           </label>
         </div>
 

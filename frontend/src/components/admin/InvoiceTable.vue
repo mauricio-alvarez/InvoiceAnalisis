@@ -1,6 +1,6 @@
 <template>
   <div class="bg-white rounded-lg shadow-md p-6">
-    <h2 class="text-2xl font-bold mb-6">All Invoices</h2>
+    <h2 class="text-2xl font-bold mb-6">Todas las facturas</h2>
 
     <div class="mb-4 grid grid-cols-1 md:grid-cols-4 gap-4">
       <div>
@@ -10,10 +10,10 @@
           @change="applyFilters"
           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
-          <option value="">All</option>
-          <option value="processing">Processing</option>
-          <option value="processed">Processed</option>
-          <option value="failed">Failed</option>
+          <option value="">Todas</option>
+          <option value="processing">En proceso</option>
+          <option value="processed">Procesadas</option>
+          <option value="failed">Fallidas</option>
         </select>
       </div>
 
@@ -49,7 +49,7 @@
 
     <div v-if="loading" class="text-center py-8">
       <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-      <p class="text-gray-600 mt-2">Loading invoices...</p>
+      <p class="text-gray-600 mt-2">Cargando facturas...</p>
     </div>
 
     <div v-else-if="error" class="p-4 bg-red-100 border border-red-400 text-red-700 rounded">
@@ -57,7 +57,7 @@
     </div>
 
     <div v-else-if="invoices.length === 0" class="text-center py-8">
-      <p class="text-gray-600">No invoices found</p>
+      <p class="text-gray-600">No hay facturas por mostrar. Cargue una factura.</p>
     </div>
 
     <div v-else class="overflow-x-auto">
@@ -68,22 +68,22 @@
               User Email
             </th>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Invoice #
+              Factura #
             </th>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Date
+              Fecha
             </th>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Vendor
+              Vendedor
             </th>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Amount
+              Monto
             </th>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Status
+              Estado
             </th>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Uploaded
+              Cargado el
             </th>
           </tr>
         </thead>

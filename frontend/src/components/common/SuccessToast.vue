@@ -37,7 +37,7 @@
               @click="handleClose"
               class="bg-white rounded-md inline-flex text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
             >
-              <span class="sr-only">Close</span>
+              <span class="sr-only">Cerrar</span>
               <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                 <path
                   fill-rule="evenodd"

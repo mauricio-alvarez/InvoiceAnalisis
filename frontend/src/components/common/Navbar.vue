@@ -18,7 +18,7 @@
               to="/invoices"
               class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 hover:text-blue-600"
             >
-              Invoices
+              Facturas
             </router-link>
             <router-link
               v-if="isAdmin"
@@ -53,13 +53,13 @@
                     @click="closeMenu"
                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   >
-                    Profile
+                    Perfil
                   </router-link>
                   <button
                     @click="handleLogout"
                     class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   >
-                    Sign out
+                    Cerrar sesión
                   </button>
                 </div>
               </div>
@@ -77,7 +77,7 @@
               to="/register"
               class="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700"
             >
-              Register
+              Registrar
             </router-link>
           </div>
         </div>

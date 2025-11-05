@@ -2,7 +2,7 @@
   <div class="bg-white rounded-lg shadow-md p-6">
     <div v-if="loading" class="text-center py-8">
       <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-      <p class="text-gray-600 mt-2">Loading invoice details...</p>
+      <p class="text-gray-600 mt-2">Cargando detalles de facturas...</p>
     </div>
 
     <div v-else-if="error" class="p-4 bg-red-100 border border-red-400 text-red-700 rounded">
@@ -22,7 +22,7 @@
 
       <!-- Extracted Fields Section with Feedback -->
       <div class="mb-6">
-        <h3 class="text-lg font-semibold mb-4">Extracted Information</h3>
+        <h3 class="text-lg font-semibold mb-4">Información extraída</h3>
         <div class="bg-gray-50 rounded-lg p-4 space-y-3">
           <FieldFeedback v-if="invoice.invoiceNumber !== undefined" field-name="invoiceNumber"
             :field-value="invoice.invoiceNumber" :current-feedback="getFieldFeedback('invoiceNumber')"
@@ -133,10 +133,10 @@
       <div class="flex gap-4">
         <button @click="handleDownload" :disabled="downloadLoading"
           class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed">
-          {{ downloadLoading ? 'Loading...' : 'Download PDF' }}
+          {{ downloadLoading ? 'Loading...' : 'Descargar PDF' }}
         </button>
         <button @click="goBack" class="bg-gray-200 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-300">
-          Back to List
+          Volver
         </button>
       </div>
     </div>

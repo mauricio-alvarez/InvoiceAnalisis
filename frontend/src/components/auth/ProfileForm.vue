@@ -1,6 +1,6 @@
 <template>
   <div class="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">
-    <h2 class="text-2xl font-bold mb-6">Complete Your Business Profile</h2>
+    <h2 class="text-2xl font-bold mb-6">Completa los datos de tu perfil</h2>
     
     <form @submit.prevent="handleSubmit">
       <div class="mb-4">

@@ -5,7 +5,7 @@
         <div class="mb-8">
           <h1 class="text-3xl font-bold text-gray-900">Admin Panel</h1>
           <p class="mt-2 text-sm text-gray-600">
-            Manage users, invoices, and view platform statistics
+            Maneje usuarios, facturas y estadísticas de la platforma
           </p>
         </div>
 
@@ -43,7 +43,7 @@
                   'whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm'
                 ]"
               >
-                Invoices
+                Facturas
               </button>
             </nav>
           </div>

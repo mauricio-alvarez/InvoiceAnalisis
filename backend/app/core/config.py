@@ -29,7 +29,12 @@ class Settings(BaseSettings):
     document_ai_enabled: bool = True
     
     # OCR Configuration
-    ocr_mode: str = "auto"  # document_ai, tesseract, or auto
+    ocr_mode: str = "auto"  # Options: "llm", "document_ai", or "auto" (tries LLM first, then Document AI)
+    
+    # OpenAI Configuration (for LLM extraction)
+    openai_api_key: str = ""
+    openai_model: str = "gpt-4o-mini"  # or gpt-4, gpt-3.5-turbo
+    llm_extraction_enabled: bool = False
     
     # Application Configuration
     environment: str = "development"

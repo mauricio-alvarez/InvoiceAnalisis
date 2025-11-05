@@ -175,6 +175,24 @@ onMounted(async () => {
 
 const formatDate = (dateString?: string): string => {
   if (!dateString) return 'N/A';
+  
+  // Parse date as local date to avoid timezone issues
+  // If date is in format "YYYY-MM-DD", parse it directly
+  const parts = dateString.split('-');
+  if (parts.length === 3) {
+    const year = parseInt(parts[0]);
+    const month = parseInt(parts[1]) - 1; // Month is 0-indexed
+    const day = parseInt(parts[2]);
+    const date = new Date(year, month, day);
+    
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+  }
+  
+  // Fallback for other date formats
   const date = new Date(dateString);
   return date.toLocaleDateString('en-US', {
     year: 'numeric',

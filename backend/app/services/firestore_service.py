@@ -460,3 +460,71 @@ class FirestoreService:
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Failed to update invoice"
             )
+    
+    async def update_invoice_feedback(
+        self,
+        invoice_id: str,
+        field_name: str,
+        user_id: str,
+        vote: str
+    ) -> Dict[str, Any]:
+        """
+        Update feedback for a specific field in an invoice
+        
+        Args:
+            invoice_id: Invoice document ID
+            field_name: Name of the field being rated
+            user_id: ID of the user providing feedback
+            vote: Vote type (upvote, downvote, or remove)
+            
+        Returns:
+            Updated invoice data
+            
+        Raises:
+            HTTPException: If update fails or invoice not found
+        """
+        try:
+            invoice_ref = self.db.collection('invoices').document(invoice_id)
+            invoice_doc = invoice_ref.get()
+            
+            if not invoice_doc.exists:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail="Invoice not found"
+                )
+            
+            invoice_data = invoice_doc.to_dict()
+            
+            # Get existing feedback or initialize empty dict
+            field_feedback = invoice_data.get('fieldFeedback', {})
+            
+            if vote == 'remove':
+                # Remove feedback for this field
+                if field_name in field_feedback:
+                    del field_feedback[field_name]
+                    logger.info(f"Removed feedback for field {field_name} on invoice {invoice_id}")
+            else:
+                # Add or update feedback
+                field_feedback[field_name] = {
+                    'vote': vote,
+                    'userId': user_id,
+                    'timestamp': datetime.utcnow()
+                }
+                logger.info(f"Updated feedback for field {field_name} on invoice {invoice_id}: {vote}")
+            
+            # Update the invoice document
+            invoice_ref.update({'fieldFeedback': field_feedback})
+            
+            # Return updated invoice data
+            updated_invoice = invoice_ref.get().to_dict()
+            updated_invoice['id'] = invoice_id
+            return updated_invoice
+            
+        except HTTPException:
+            raise
+        except Exception as e:
+            logger.error(f"Failed to update invoice feedback: {e}")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Failed to update feedback"
+            )

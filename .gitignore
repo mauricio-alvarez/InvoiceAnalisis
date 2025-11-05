@@ -151,3 +151,4 @@ docker-compose.override.yml
 *.ps1
 *.env
 *.sh
+.env.example

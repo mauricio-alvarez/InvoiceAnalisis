@@ -13,7 +13,8 @@ from app.models.invoice import (
     InvoiceResponse,
     InvoiceListResponse,
     InvoiceDetailResponse,
-    DownloadUrlResponse
+    DownloadUrlResponse,
+    FeedbackRequest
 )
 from app.services.storage_service import StorageService
 from app.services.firestore_service import FirestoreService
@@ -34,6 +35,7 @@ async def upload_invoice(
     
     Uploads a PDF invoice file to Cloud Storage and triggers processing.
     Requires email verification and completed business profile.
+    Uses configured OCR engine (Document AI, Tesseract, or auto with fallback).
     
     Args:
         file: PDF file to upload (max 10MB)
@@ -51,6 +53,9 @@ async def upload_invoice(
     try:
         storage_service = StorageService()
         firestore_service = FirestoreService()
+        
+        # Initialize PDFProcessor with configured OCR mode
+        # The processor will automatically use settings from config
         pdf_processor = PDFProcessor()
         
         # Upload file to Cloud Storage
@@ -75,10 +80,15 @@ async def upload_invoice(
             # Download file content
             file_content = storage_service.download_file(blob_name)
             
-            # Extract invoice data
-            extracted_data = pdf_processor.process_invoice(file_content)
+            # Extract invoice data using configured OCR engine
+            # PDFProcessor handles Document AI with automatic fallback to Tesseract
+            extracted_data = await pdf_processor.process_invoice(file_content)
             
-            # Update invoice with extracted data
+            # Log which OCR engine was used
+            ocr_engine = extracted_data.get('ocrEngine', 'unknown')
+            logger.info(f"Invoice {invoice_id} processed with OCR engine: {ocr_engine}")
+            
+            # Update invoice with extracted data including OCR metadata
             update_data = {
                 'status': 'processed',
                 'processedAt': datetime.utcnow(),
@@ -92,6 +102,7 @@ async def upload_invoice(
         except Exception as e:
             logger.error(f"Failed to process invoice {invoice_id}: {e}")
             # Update status to failed
+            # Document AI errors are handled gracefully by PDFProcessor fallback
             await firestore_service.update_invoice(invoice_id, {
                 'status': 'failed',
                 'errorMessage': str(e),
@@ -217,6 +228,9 @@ async def get_invoice_detail(
         'total_amount': invoice_data.get('totalAmount'),
         'currency': invoice_data.get('currency'),
         'line_items': invoice_data.get('lineItems'),
+        'ocr_engine': invoice_data.get('ocrEngine'),
+        'ocr_confidence': invoice_data.get('ocrConfidence'),
+        'field_feedback': invoice_data.get('fieldFeedback'),
         'uploaded_at': invoice_data.get('uploaded_at'),
         'processed_at': invoice_data.get('processed_at'),
         'error_message': invoice_data.get('errorMessage'),
@@ -289,3 +303,104 @@ async def get_download_url(
         download_url=signed_url,
         expires_at=expires_at
     )
+
+
+@router.put("/{invoice_id}/feedback", response_model=InvoiceDetailResponse)
+async def submit_field_feedback(
+    invoice_id: str,
+    feedback: FeedbackRequest,
+    current_user: AuthenticatedUser = Depends(require_profile_completed)
+) -> InvoiceDetailResponse:
+    """
+    Submit feedback for an extracted field
+    
+    Allows users to upvote or downvote the accuracy of extracted invoice fields.
+    Users can only provide feedback on their own invoices.
+    
+    Args:
+        invoice_id: Invoice document ID
+        feedback: Feedback data (field name and vote type)
+        current_user: Authenticated user with verified email and completed profile
+        
+    Returns:
+        InvoiceDetailResponse with updated invoice data including feedback
+        
+    Raises:
+        400: Invalid field name or vote type
+        401: Invalid or expired token
+        403: Access denied (not owner) or profile not completed
+        404: Invoice not found
+        500: Failed to submit feedback
+    """
+    try:
+        firestore_service = FirestoreService()
+        
+        # Get invoice to verify ownership
+        invoice_data = await firestore_service.get_invoice(invoice_id)
+        
+        if not invoice_data:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Invoice not found"
+            )
+        
+        # Check ownership
+        if invoice_data.get('userId') != current_user.uid:
+            logger.warning(
+                f"User {current_user.uid} attempted to submit feedback for invoice {invoice_id} "
+                f"owned by {invoice_data.get('userId')}"
+            )
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Access denied"
+            )
+        
+        # Update feedback in Firestore
+        updated_invoice = await firestore_service.update_invoice_feedback(
+            invoice_id=invoice_id,
+            field_name=feedback.field_name,
+            user_id=current_user.uid,
+            vote=feedback.vote
+        )
+        
+        # Convert to response model
+        if 'uploadedAt' in updated_invoice:
+            updated_invoice['uploaded_at'] = updated_invoice.pop('uploadedAt')
+        if 'processedAt' in updated_invoice:
+            updated_invoice['processed_at'] = updated_invoice.pop('processedAt')
+        
+        response_data = {
+            'id': updated_invoice.get('id'),
+            'user_id': updated_invoice.get('userId'),
+            'file_name': updated_invoice.get('fileName'),
+            'storage_url': updated_invoice.get('storageUrl'),
+            'status': updated_invoice.get('status'),
+            'invoice_number': updated_invoice.get('invoiceNumber'),
+            'invoice_date': updated_invoice.get('invoiceDate'),
+            'vendor_name': updated_invoice.get('vendorName'),
+            'total_amount': updated_invoice.get('totalAmount'),
+            'currency': updated_invoice.get('currency'),
+            'line_items': updated_invoice.get('lineItems'),
+            'ocr_engine': updated_invoice.get('ocrEngine'),
+            'ocr_confidence': updated_invoice.get('ocrConfidence'),
+            'field_feedback': updated_invoice.get('fieldFeedback'),
+            'uploaded_at': updated_invoice.get('uploaded_at'),
+            'processed_at': updated_invoice.get('processed_at'),
+            'error_message': updated_invoice.get('errorMessage'),
+        }
+        
+        logger.info(
+            f"User {current_user.uid} submitted {feedback.vote} feedback "
+            f"for field {feedback.field_name} on invoice {invoice_id}"
+        )
+        
+        return InvoiceDetailResponse(**response_data)
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Failed to submit feedback: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to submit feedback"
+        )

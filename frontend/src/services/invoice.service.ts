@@ -1,5 +1,5 @@
 import api from './api';
-import type { Invoice, InvoiceResponse, InvoiceListResponse, InvoiceQuery } from '../types/invoice';
+import type { Invoice, InvoiceResponse, InvoiceListResponse, InvoiceQuery, FeedbackRequest } from '../types/invoice';
 
 class InvoiceService {
   /**
@@ -46,6 +46,14 @@ class InvoiceService {
   async getDownloadUrl(invoiceId: string): Promise<string> {
     const response = await api.get<{ url: string }>(`/api/invoices/${invoiceId}/download`);
     return response.data.url;
+  }
+
+  /**
+   * Submit field feedback for an invoice
+   */
+  async submitFieldFeedback(invoiceId: string, feedback: FeedbackRequest): Promise<Invoice> {
+    const response = await api.put<Invoice>(`/api/invoices/${invoiceId}/feedback`, feedback);
+    return response.data;
   }
 }
 

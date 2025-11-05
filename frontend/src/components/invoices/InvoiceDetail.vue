@@ -15,30 +15,67 @@
           <h2 class="text-2xl font-bold">Invoice Details</h2>
           <p class="text-gray-600 mt-1">Invoice #{{ invoice.invoiceNumber || 'N/A' }}</p>
         </div>
-        <span
-          class="px-3 py-1 text-sm font-semibold rounded-full"
-          :class="getStatusClass(invoice.status)"
-        >
+        <span class="px-3 py-1 text-sm font-semibold rounded-full" :class="getStatusClass(invoice.status)">
           {{ invoice.status }}
         </span>
       </div>
 
+      <!-- Extracted Fields Section with Feedback -->
+      <div class="mb-6">
+        <h3 class="text-lg font-semibold mb-4">Extracted Information</h3>
+        <div class="bg-gray-50 rounded-lg p-4 space-y-3">
+          <FieldFeedback v-if="invoice.invoiceNumber !== undefined" field-name="invoiceNumber"
+            :field-value="invoice.invoiceNumber" :current-feedback="getFieldFeedback('invoiceNumber')"
+            :invoice-id="invoice.id" @feedback="handleFeedback" />
+
+          <FieldFeedback v-if="invoice.invoiceDate !== undefined" field-name="invoiceDate"
+            :field-value="formatDate(invoice.invoiceDate)" :current-feedback="getFieldFeedback('invoiceDate')"
+            :invoice-id="invoice.id" @feedback="handleFeedback" />
+
+          <FieldFeedback v-if="invoice.dueDate !== undefined" field-name="dueDate"
+            :field-value="formatDate(invoice.dueDate)" :current-feedback="getFieldFeedback('dueDate')"
+            :invoice-id="invoice.id" @feedback="handleFeedback" />
+
+          <FieldFeedback v-if="invoice.vendorName !== undefined" field-name="vendorName"
+            :field-value="invoice.vendorName" :current-feedback="getFieldFeedback('vendorName')"
+            :invoice-id="invoice.id" @feedback="handleFeedback" />
+
+          <FieldFeedback v-if="invoice.supplierName !== undefined" field-name="supplierName"
+            :field-value="invoice.supplierName" :current-feedback="getFieldFeedback('supplierName')"
+            :invoice-id="invoice.id" @feedback="handleFeedback" />
+
+          <FieldFeedback v-if="invoice.supplierRuc !== undefined" field-name="supplierRuc"
+            :field-value="invoice.supplierRuc" :current-feedback="getFieldFeedback('supplierRuc')"
+            :invoice-id="invoice.id" @feedback="handleFeedback" />
+
+          <FieldFeedback v-if="invoice.subtotal !== undefined" field-name="subtotal"
+            :field-value="formatAmount(invoice.subtotal, invoice.currency)"
+            :current-feedback="getFieldFeedback('subtotal')" :invoice-id="invoice.id" @feedback="handleFeedback" />
+
+          <FieldFeedback v-if="invoice.taxAmount !== undefined" field-name="taxAmount"
+            :field-value="formatAmount(invoice.taxAmount, invoice.currency)"
+            :current-feedback="getFieldFeedback('taxAmount')" :invoice-id="invoice.id" @feedback="handleFeedback" />
+
+          <FieldFeedback v-if="invoice.totalAmount !== undefined" field-name="totalAmount"
+            :field-value="formatAmount(invoice.totalAmount, invoice.currency)"
+            :current-feedback="getFieldFeedback('totalAmount')" :invoice-id="invoice.id" @feedback="handleFeedback" />
+
+          <FieldFeedback v-if="invoice.currency !== undefined" field-name="currency" :field-value="invoice.currency"
+            :current-feedback="getFieldFeedback('currency')" :invoice-id="invoice.id" @feedback="handleFeedback" />
+        </div>
+      </div>
+
+      <!-- OCR Engine Info -->
+      <div v-if="invoice.ocrEngine" class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded">
+        <h3 class="text-sm font-medium text-blue-800 mb-1">OCR Engine</h3>
+        <p class="text-sm text-blue-600">
+          Processed with: {{ invoice.ocrEngine === 'document_ai' ? 'Google Document AI' : 'Tesseract OCR' }}
+          <span v-if="invoice.ocrConfidence"> (Confidence: {{ (invoice.ocrConfidence * 100).toFixed(1) }}%)</span>
+        </p>
+      </div>
+
+      <!-- Additional Metadata -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-        <div>
-          <h3 class="text-sm font-medium text-gray-500 mb-2">Vendor Information</h3>
-          <p class="text-lg font-semibold">{{ invoice.vendorName || 'N/A' }}</p>
-        </div>
-
-        <div>
-          <h3 class="text-sm font-medium text-gray-500 mb-2">Invoice Date</h3>
-          <p class="text-lg font-semibold">{{ formatDate(invoice.invoiceDate) }}</p>
-        </div>
-
-        <div>
-          <h3 class="text-sm font-medium text-gray-500 mb-2">Total Amount</h3>
-          <p class="text-lg font-semibold">{{ formatAmount(invoice.totalAmount, invoice.currency) }}</p>
-        </div>
-
         <div>
           <h3 class="text-sm font-medium text-gray-500 mb-2">Uploaded</h3>
           <p class="text-lg font-semibold">{{ formatDate(invoice.uploadedAt) }}</p>
@@ -85,7 +122,8 @@
                 <td class="px-6 py-4 text-sm text-gray-900">{{ item.description }}</td>
                 <td class="px-6 py-4 text-sm text-gray-500">{{ item.quantity }}</td>
                 <td class="px-6 py-4 text-sm text-gray-500">{{ formatAmount(item.unitPrice, invoice.currency) }}</td>
-                <td class="px-6 py-4 text-sm text-gray-900 font-medium">{{ formatAmount(item.totalPrice, invoice.currency) }}</td>
+                <td class="px-6 py-4 text-sm text-gray-900 font-medium">{{ formatAmount(item.totalPrice,
+                  invoice.currency) }}</td>
               </tr>
             </tbody>
           </table>
@@ -93,17 +131,11 @@
       </div>
 
       <div class="flex gap-4">
-        <button
-          @click="handleDownload"
-          :disabled="downloadLoading"
-          class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
-        >
+        <button @click="handleDownload" :disabled="downloadLoading"
+          class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed">
           {{ downloadLoading ? 'Loading...' : 'Download PDF' }}
         </button>
-        <button
-          @click="goBack"
-          class="bg-gray-200 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-300"
-        >
+        <button @click="goBack" class="bg-gray-200 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-300">
           Back to List
         </button>
       </div>
@@ -115,6 +147,7 @@
 import { ref, onMounted, computed } from 'vue';
 import { useInvoiceStore } from '../../stores/invoices';
 import { useRouter } from 'vue-router';
+import FieldFeedback from './FieldFeedback.vue';
 
 interface Props {
   invoiceId: string;
@@ -126,6 +159,7 @@ const invoiceStore = useInvoiceStore();
 const router = useRouter();
 
 const downloadLoading = ref(false);
+const feedbackLoading = ref(false);
 
 const invoice = computed(() => invoiceStore.currentInvoice);
 const loading = computed(() => invoiceStore.loading);
@@ -181,5 +215,31 @@ const handleDownload = async () => {
 
 const goBack = () => {
   router.push('/invoices');
+};
+
+const getFieldFeedback = (fieldName: string): 'upvote' | 'downvote' | null => {
+  if (!invoice.value?.fieldFeedback) return null;
+  const feedback = invoice.value.fieldFeedback[fieldName];
+  return feedback ? feedback.vote : null;
+};
+
+const handleFeedback = async ({ fieldName, vote }: { fieldName: string; vote: 'upvote' | 'downvote' | 'remove' }) => {
+  if (feedbackLoading.value || !invoice.value) {
+    console.log('Feedback blocked:', { feedbackLoading: feedbackLoading.value, hasInvoice: !!invoice.value });
+    return;
+  }
+
+  feedbackLoading.value = true;
+
+  try {
+    console.log('Submitting feedback:', { invoiceId: props.invoiceId, fieldName, vote });
+    await invoiceStore.submitFieldFeedback(props.invoiceId, fieldName, vote);
+    console.log('Feedback submitted successfully');
+  } catch (err) {
+    console.error('Error submitting feedback:', err);
+    // Error is already handled in the store and FieldFeedback component
+  } finally {
+    feedbackLoading.value = false;
+  }
 };
 </script>

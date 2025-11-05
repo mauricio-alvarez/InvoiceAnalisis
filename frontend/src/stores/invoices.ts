@@ -103,6 +103,43 @@ export const useInvoiceStore = defineStore('invoices', () => {
     currentInvoice.value = null;
   };
 
+  const submitFieldFeedback = async (invoiceId: string, fieldName: string, vote: 'upvote' | 'downvote' | 'remove') => {
+    error.value = null;
+    try {
+      const updatedInvoice: Invoice = await invoiceService.submitFieldFeedback(invoiceId, { fieldName, vote });
+      
+      // Validate response
+      if (!updatedInvoice || !updatedInvoice.id) {
+        throw new Error('Invalid response from server');
+      }
+      
+      // Update currentInvoice with new feedback data
+      if (currentInvoice.value && currentInvoice.value.id === invoiceId) {
+        // Preserve the current invoice and only update the fieldFeedback
+        currentInvoice.value = {
+          ...currentInvoice.value,
+          ...updatedInvoice,
+          fieldFeedback: updatedInvoice.fieldFeedback || {}
+        };
+      }
+      
+      // Also update in the invoices list if present
+      const index = invoices.value.findIndex(inv => inv.id === invoiceId);
+      if (index !== -1) {
+        invoices.value[index] = {
+          ...invoices.value[index],
+          ...updatedInvoice,
+          fieldFeedback: updatedInvoice.fieldFeedback || {}
+        };
+      }
+      
+      return { success: true, invoice: updatedInvoice };
+    } catch (err: any) {
+      error.value = err.message || 'Failed to submit feedback';
+      throw err;
+    }
+  };
+
   return {
     // State
     invoices,
@@ -121,6 +158,7 @@ export const useInvoiceStore = defineStore('invoices', () => {
     uploadInvoice,
     fetchInvoiceDetail,
     getDownloadUrl,
+    submitFieldFeedback,
     clearError,
     clearCurrentInvoice,
   };

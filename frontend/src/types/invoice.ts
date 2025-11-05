@@ -5,6 +5,12 @@ export interface LineItem {
   totalPrice: number;
 }
 
+export interface FieldFeedback {
+  vote: 'upvote' | 'downvote';
+  userId: string;
+  timestamp: string;
+}
+
 export interface Invoice {
   id: string;
   userId: string;
@@ -15,10 +21,24 @@ export interface Invoice {
   // Extracted data
   invoiceNumber?: string;
   invoiceDate?: string;
+  dueDate?: string;
   vendorName?: string;
+  supplierName?: string;
+  supplierRuc?: string;
   totalAmount?: number;
+  taxAmount?: number;
+  subtotal?: number;
   currency?: string;
   lineItems?: LineItem[];
+  
+  // OCR metadata
+  ocrEngine?: 'document_ai' | 'tesseract';
+  ocrConfidence?: number;
+  
+  // Field feedback
+  fieldFeedback?: {
+    [fieldName: string]: FieldFeedback;
+  };
   
   // Metadata
   uploadedAt: string;
@@ -47,4 +67,14 @@ export interface InvoiceQuery {
   order?: 'asc' | 'desc';
   page?: number;
   limit?: number;
+}
+
+export interface FeedbackRequest {
+  fieldName: string;
+  vote: 'upvote' | 'downvote' | 'remove';
+}
+
+export interface FeedbackResponse {
+  success: boolean;
+  invoice: Invoice;
 }

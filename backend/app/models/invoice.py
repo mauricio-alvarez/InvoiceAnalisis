@@ -1,7 +1,7 @@
 """Invoice data models"""
-from typing import Optional, List
+from typing import Optional, List, Dict, Any
 from datetime import datetime
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 
 class LineItem(BaseModel):
@@ -43,6 +43,10 @@ class InvoiceResponse(BaseModel):
     currency: Optional[str] = None
     line_items: Optional[List[LineItem]] = Field(None, alias="lineItems")
     
+    # OCR metadata
+    ocr_engine: Optional[str] = Field(None, alias="ocrEngine")
+    ocr_confidence: Optional[float] = Field(None, alias="ocrConfidence")
+    
     # Metadata
     uploaded_at: datetime = Field(alias="uploadedAt")
     processed_at: Optional[datetime] = Field(None, alias="processedAt")
@@ -64,7 +68,7 @@ class InvoiceListResponse(BaseModel):
 
 class InvoiceDetailResponse(InvoiceResponse):
     """Model for detailed invoice response with all fields"""
-    pass
+    field_feedback: Optional[Dict[str, Dict[str, Any]]] = Field(None, alias="fieldFeedback")
 
 
 class InvoiceStatistics(BaseModel):
@@ -89,3 +93,26 @@ class DownloadUrlResponse(BaseModel):
     class Config:
         populate_by_name = True
         by_alias = True
+
+
+class FeedbackRequest(BaseModel):
+    """Model for field feedback submission"""
+    field_name: str = Field(..., alias="fieldName")
+    vote: str = Field(..., pattern="^(upvote|downvote|remove)$")
+    
+    class Config:
+        populate_by_name = True
+        by_alias = True
+    
+    @field_validator('field_name')
+    @classmethod
+    def validate_field_name(cls, v: str) -> str:
+        """Validate field name is a valid invoice field"""
+        valid_fields = [
+            'invoiceNumber', 'invoiceDate', 'dueDate',
+            'totalAmount', 'taxAmount', 'subtotal',
+            'vendorName', 'supplierRuc', 'currency'
+        ]
+        if v not in valid_fields:
+            raise ValueError(f'Invalid field name. Must be one of: {valid_fields}')
+        return v

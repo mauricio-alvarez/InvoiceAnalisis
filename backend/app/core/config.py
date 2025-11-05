@@ -22,6 +22,15 @@ class Settings(BaseSettings):
     # Firestore
     firestore_database: str = "(default)"
     
+    # Document AI Configuration
+    document_ai_project_id: str = ""
+    document_ai_location: str = "us"
+    document_ai_processor_id: str = ""
+    document_ai_enabled: bool = True
+    
+    # OCR Configuration
+    ocr_mode: str = "auto"  # document_ai, tesseract, or auto
+    
     # Application Configuration
     environment: str = "development"
     log_level: str = "INFO"

@@ -1,6 +1,8 @@
 # Plataforma de Gestión de Facturas
 
-Sistema de procesamiento inteligente de facturas con extracción automática de datos usando IA.
+Plataforma para procesamiento inteligente de facturas con extracción automática de datos usando IA. 
+Alojado en GCP. Primero registrarse y rellenar datos del perfil.
+[URL](https://fluid-advantage-476915-h9.web.app/login?redirect=/dashboard)
 
 ## Tecnologías
 
